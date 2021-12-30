@@ -23,7 +23,7 @@
 #include <stdio.h>
 
 #include "main.h"
-#include "cmsis_os.h"
+#include "app_threadx.h"
 #include "mv_syscalls.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -47,19 +47,6 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* Definitions for defaultTask */
-osThreadId_t GPIOTask;
-const osThreadAttr_t GPIOTask_attributes = {
-    .name = "GPIOTask",
-    .priority = (osPriority_t) osPriorityNormal,
-    .stack_size = 1024
-};
-
-osThreadId_t DebugTask;
-const osThreadAttr_t DebugTask_attributes = {
-    .name = "DebugTask",
-    .priority = (osPriority_t) osPriorityNormal,
-    .stack_size = 1024
-};
 
 /* USER CODE BEGIN PV */
 
@@ -67,7 +54,7 @@ const osThreadAttr_t DebugTask_attributes = {
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
+void MX_GPIO_Init(void);
 void StartGPIOTask(void *argument);
 void StartDebugTask(void *argument);
 
@@ -110,7 +97,6 @@ int main(void)
     /* USER CODE END 2 */
 
     /* Init scheduler */
-    osKernelInitialize();
 
     /* USER CODE BEGIN RTOS_MUTEX */
     /* add mutexes, ... */
@@ -130,15 +116,13 @@ int main(void)
 
     /* Create the thread(s) */
     /* creation of defaultTask */
-    GPIOTask = osThreadNew(StartGPIOTask, NULL, &GPIOTask_attributes);
-    DebugTask = osThreadNew(StartDebugTask, NULL, &DebugTask_attributes);
 
     /* USER CODE BEGIN RTOS_THREADS */
     /* add threads, ... */
     /* USER CODE END RTOS_THREADS */
 
     /* Start scheduler */
-    osKernelStart();
+    MX_ThreadX_Init();
 
     /* We should never get here as control is now taken by the scheduler */
     /* Infinite loop */
@@ -174,7 +158,7 @@ void SystemClock_Config(void)
   * @param None
   * @retval None
   */
-static void MX_GPIO_Init(void)
+void MX_GPIO_Init(void)
 {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
@@ -204,17 +188,7 @@ static void MX_GPIO_Init(void)
   * @retval None
   */
 /* USER CODE END Header_StartDefaultTask */
-void StartGPIOTask(void *argument)
-{
-    /* USER CODE BEGIN 5 */
-    /* Infinite loop */
-    for(;;)
-    {
-        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-        osDelay(1000);
-    }
-    /* USER CODE END 5 */
-}
+
 
 /* USER CODE BEGIN Header_StartDebugTask */
 /**
@@ -223,21 +197,7 @@ void StartGPIOTask(void *argument)
   * @retval None
   */
 /* USER CODE END Header_StartDefaultTask */
-void StartDebugTask(void *argument)
-{
-    /* USER CODE BEGIN 5 */
-    printf("Hello, World!\n");
-    unsigned n = 0;
 
-    /* Infinite loop */
-    for(;;)
-    {
-        printf("Ping %u\n", n);
-        n++;
-        osDelay(1000);
-    }
-    /* USER CODE END 5 */
-}
 
 /**
   * @brief  This function is executed in case of error occurrence.

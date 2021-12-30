@@ -7,7 +7,7 @@ set(CMAKE_C_OUTPUT_EXTENSION .o)
 
 set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_C_COMPILER> -Wl,-Map=<TARGET>.map <CMAKE_C_LINK_FLAGS> <LINK_FLAGS> <OBJECTS>  -o <TARGET> <LINK_LIBRARIES>")
 set(CMAKE_ASM_COMPILER arm-none-eabi-gcc CACHE FILEPATH "ASM compiler")
-set(CMAKE_ASM_COMPILE_OBJECT "<CMAKE_ASM_COMPILER> <DEFINES> <INCLUDES> <FLAGS> -o <OBJECT> -c <SOURCE>")
+set(CMAKE_ASM_COMPILE_OBJECT "<CMAKE_ASM_COMPILER> -mcpu=cortex-m33 -DTX_SINGLE_MODE_NON_SECURE <DEFINES> <INCLUDES> <FLAGS> -o <OBJECT> -c <SOURCE>")
 set(CMAKE_INCLUDE_FLAG_ASM "-I")
 set(CMAKE_OBJCOPY arm-none-eabi-objcopy CACHE FILEPATH "")
 set(CMAKE_OBJDUMP arm-none-eabi-objdump CACHE FILEPATH "")
@@ -18,7 +18,7 @@ set(CMAKE_CXX_COMPILER_WORKS ON)
 
 set(CMAKE_C_FLAGS "-mcpu=cortex-m33 -std=gnu11 -g3 \
   -DUSE_CUSTOM_SYSTICK_HANDLER_IMPLEMENTATION -DUSE_HAL_DRIVER -DSTM32L552xx \
-  -DSTM32U585xx -DDEBUG -DCMSIS_device_header=\\\"stm32u585xx.h\\\" \
+  -DSTM32U585xx -DDEBUG -DCMSIS_device_header=\\\"stm32u585xx.h\\\" -DTX_SINGLE_MODE_NON_SECURE \
   -c -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage \
   -MMD -MP --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=soft -mthumb")
 

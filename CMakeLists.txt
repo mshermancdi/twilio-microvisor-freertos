@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 
 set(CMAKE_TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/toolchain.cmake")
 
-project(gpio_toggle_demo.elf C ASM)
+project(gpio_toggle_demo-threadx.elf C ASM)
 
 include_directories(include
                     ${twilio-microvisor-hal-stm32u5_INCLUDE_DIRS})
@@ -36,35 +36,20 @@ add_subdirectory(twilio-microvisor-hal-stm32u5)
 
 add_library(ST_Code STATIC
   ST_Code/Core/Src/syscalls.c ST_Code/Core/Src/sysmem.c
-  ST_Code/Core/Src/stm32u5xx_hal_msp.c
-  ST_Code/CMSIS_RTOS_V2/cmsis_os2.c
+  ST_Code/Core/Src/stm32u5xx_hal_msp.c  
 )
 
-target_include_directories(ST_Code PUBLIC
-  ST_Code/CMSIS_RTOS_V2
+target_include_directories(ST_Code PUBLIC  
   ST_Code/Core/Inc
 )
 
-target_link_libraries(ST_Code LINK_PUBLIC twilio-microvisor-hal-stm32u5 FreeRTOS)
 
-add_library(FreeRTOS STATIC
-  FreeRTOS-Kernel/croutine.c
-  FreeRTOS-Kernel/event_groups.c
-  FreeRTOS-Kernel/list.c
-  FreeRTOS-Kernel/queue.c
-  FreeRTOS-Kernel/stream_buffer.c
-  FreeRTOS-Kernel/tasks.c
-  FreeRTOS-Kernel/timers.c
-  FreeRTOS-Kernel/portable/GCC/ARM_CM33_NTZ/non_secure/port.c
-  FreeRTOS-Kernel/portable/GCC/ARM_CM33_NTZ/non_secure/portasm.c
-  FreeRTOS-Kernel/portable/MemMang/heap_4.c
-)
+set(THREADX_ARCH "cortex_m33")
+set(THREADX_TOOLCHAIN "gnu")
 
-target_include_directories(FreeRTOS PUBLIC
-  Config/
-  FreeRTOS-Kernel/include
-  FreeRTOS-Kernel/portable/GCC/ARM_CM33_NTZ/non_secure
-)
+add_subdirectory(threadx)
+
+target_link_libraries(ST_Code LINK_PUBLIC twilio-microvisor-hal-stm32u5 threadx)
 
 add_subdirectory(Demo)
 
