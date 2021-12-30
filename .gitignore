@@ -4,3 +4,6 @@
 *.su
 *.sw[pno]
 build/*
+/.cproject
+/.project
+/.pydevproject
