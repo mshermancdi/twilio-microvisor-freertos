@@ -25,7 +25,7 @@
 #include "main.h"
 #include "app_threadx.h"
 #include "mv_syscalls.h"
-
+#include "usart.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -50,13 +50,18 @@
 
 /* USER CODE BEGIN PV */
 
+#define console_uart	huart1
+#define UART_BUFFER_SIZE    20
+
+__IO int uart_write_idx = 0;
+char uart_buffer[UART_BUFFER_SIZE];
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 void MX_GPIO_Init(void);
-void StartGPIOTask(void *argument);
-void StartDebugTask(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -92,8 +97,15 @@ int main(void)
 
     /* Initialize all configured peripherals */
     MX_GPIO_Init();
+    MX_USART1_UART_Init();
+    MX_USART2_UART_Init();
     /* USER CODE BEGIN 2 */
 
+    /* Force no buffer for the getc() usage. */
+    setbuf(stdin, NULL);
+
+    /* Start getchar under interrupt. */
+    HAL_UART_Receive_IT(&console_uart, (uint8_t *)&uart_buffer[0], 1);
     /* USER CODE END 2 */
 
     /* Init scheduler */
@@ -178,26 +190,80 @@ void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+#if (defined(__GNUC__) && !defined(__ARMCC_VERSION))
+/**
+  * With GCC,
+  * small printf (option LD Linker->Libraries->Small printf set to 'Yes')
+  * calls __io_putchar()
+  */
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 
+#elif defined ( __ICCARM__ )
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+
+#elif defined (__ARMCC_VERSION)
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#endif /* __GNUC__ */
+
+/**
+  * @brief  Retargets the C library printf function to the USART.
+  * @param  None
+  * @retval None
+  */
+PUTCHAR_PROTOTYPE
+{
+  /* Write a character to the USART1. */
+  HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xFFFF);
+
+  return ch;
+}
+
+
+#if (defined(__GNUC__) && !defined(__ARMCC_VERSION))
+#define GETCHAR_PROTOTYPE int __io_getchar(void)
+
+#elif defined ( __ICCARM__ )
+#define GETCHAR_PROTOTYPE int fgetc(FILE *f)
+
+#elif defined(__ARMCC_VERSION)
+#define GETCHAR_PROTOTYPE int fgetc(FILE *f)
+#endif /* __GNUC__ */
+
+/**
+  * @brief  Retargets the C library scanf function to the USART.
+  * @param  None
+  * @retval None
+  */
+GETCHAR_PROTOTYPE
+{
+  static int uart_read_idx = 0;
+  char ch;
+
+  while (uart_write_idx == uart_read_idx)
+  {
+    HAL_Delay(5);
+  }
+  ch = uart_buffer[uart_read_idx++];
+  if (uart_read_idx == UART_BUFFER_SIZE)
+  {
+    uart_read_idx = 0;
+  }
+  return ch;
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+  if (huart == &console_uart)
+  {
+    uart_write_idx++;
+    if (uart_write_idx == UART_BUFFER_SIZE)
+    {
+      uart_write_idx = 0;
+    }
+    HAL_UART_Receive_IT(huart, (uint8_t *)&uart_buffer[uart_write_idx], 1);
+  }
+}
 /* USER CODE END 4 */
-
-/* USER CODE BEGIN Header_StartGPIOTask */
-/**
-  * @brief  Function implementing the defaultTask thread.
-  * @param  argument: Not used
-  * @retval None
-  */
-/* USER CODE END Header_StartDefaultTask */
-
-
-/* USER CODE BEGIN Header_StartDebugTask */
-/**
-  * @brief  Function implementing the defaultTask thread.
-  * @param  argument: Not used
-  * @retval None
-  */
-/* USER CODE END Header_StartDefaultTask */
-
 
 /**
   * @brief  This function is executed in case of error occurrence.
