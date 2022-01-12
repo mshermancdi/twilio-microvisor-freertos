@@ -53,6 +53,6 @@ add_subdirectory(threadx)
 
 target_link_libraries(ST_Code LINK_PUBLIC twilio-microvisor-hal-stm32u5 threadx)
 
-add_subdirectory(Demo)
+add_subdirectory(Qube)
 
 unset(CONFIG_DIRECTORY)

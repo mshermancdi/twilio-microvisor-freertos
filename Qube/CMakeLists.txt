@@ -9,6 +9,13 @@ add_executable(console_out-threadx.elf
   Src/usart.c
   Src/console.c
   Src/stm32u5xx_it.c
+  Src/swarm.c
+  Src/NMEA.c
+  Src/debug_menu_strings_en.c
+  Src/debug_utils.c
+  Src/gpdma.c
+  Src/tim.c
+  Src/gps.c
 )
 
 target_include_directories(console_out-threadx.elf PUBLIC

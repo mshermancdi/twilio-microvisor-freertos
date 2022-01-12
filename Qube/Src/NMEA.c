@@ -132,7 +132,7 @@ uint8_t GetField(uint8_t* pData, uint8_t* pField, int nFieldNum, int nMaxFieldLe
 	//
 	// Validate params
 	//
-	if(pData == NULL || pField == NULL || nMaxFieldLen <= 0)
+	if(!pData || !pField || nMaxFieldLen <= 0)
 	{
 		return 0;
 	}
@@ -153,7 +153,7 @@ uint8_t GetField(uint8_t* pData, uint8_t* pField, int nFieldNum, int nMaxFieldLe
 
 		i++;
 
-		if(pData[i] == NULL)
+		if(!pData[i])
 		{
 			pField[0] = '\0';
 			return 0;

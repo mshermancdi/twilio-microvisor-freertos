@@ -4,7 +4,6 @@
 
 
 #include "debug_utils.h"
-#include <stdlib.h>
 
 char GetHexChar(uint8_t val)
 {	
@@ -99,4 +98,14 @@ void EpochToHumanReadable(char *out_buff, uint16_t buff_len, time_t raw)
 	strftime(out_buff, buff_len, "%a %Y-%m-%d %H:%M:%S %Z", &ts);
 	
 	return;
+}
+
+// Utility function to get the current time stamp while only touching this file
+char *GetTimeStamp(void)
+{
+#ifdef __TIMESTAMP__
+	return __TIMESTAMP__;
+#else
+	return __DATE__;
+#endif
 }

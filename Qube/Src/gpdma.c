@@ -30,12 +30,6 @@ DMA_HandleTypeDef handle_GPDMA1_Channel2;
 DMA_HandleTypeDef handle_GPDMA1_Channel1;
 DMA_HandleTypeDef handle_GPDMA1_Channel0;
 DMA_HandleTypeDef handle_GPDMA1_Channel12;
-DMA_HandleTypeDef handle_GPDMA1_Channel12;
-DMA_HandleTypeDef handle_GPDMA1_Channel4;
-DMA_HandleTypeDef handle_GPDMA1_Channel3;
-DMA_HandleTypeDef handle_GPDMA1_Channel2;
-DMA_HandleTypeDef handle_GPDMA1_Channel1;
-DMA_HandleTypeDef handle_GPDMA1_Channel0;
 
 /* GPDMA1 init function */
 void MX_GPDMA1_Init(void)

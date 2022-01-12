@@ -23,9 +23,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//#include "swarm_tile.h"
+#include "swarm.h"
 #include "debug_utils.h"
-//#include "gps.h"
+#include "gps.h"
 
 int32_t quit_msg = 0;
 
@@ -71,9 +71,8 @@ static void mygets(char *s, cmd_t cmdlist[]);
 static void getcmd(char *s, cmd_t cmdlist[]);
 static char *mystrdup(char *s);
 
-//extern S_TILE_DEVICE tile;
-//extern S_GPS_DEVICE gps;
-//extern void ProcessTileCommands(ARG_LIST args);
+extern S_SWARM_DEVICE swarm;
+extern S_GPS_DEVICE gps;
 
 int32_t help_cmd(int32_t argc, char **argv)
 {
@@ -86,6 +85,7 @@ int32_t help_cmd(int32_t argc, char **argv)
     printf("\"%10s\"            %s\n", cmdlist[i].name, cmdlist[i].comment);
     i = i + 1;
   } while (cmdlist[i].name != NULL);
+  printf("\nBUILD_TIME: %s\n", GetTimeStamp());
   return 0;
 }
 
@@ -97,7 +97,7 @@ int32_t quit_cmd(int32_t argc, char **argv)
   return 0;
 }
 
-/*
+
 int32_t gps_cmd(int32_t argc, char **argv)
 {	
   UNUSED(argc);
@@ -106,10 +106,10 @@ int32_t gps_cmd(int32_t argc, char **argv)
 	uint8_t buffer[1000];
 	
 	if (gps.IsInitialized)
-	{	
-		HAL_GPIO_WritePin(GPS_TIM_RX_GPIO_Port, GPS_TIM_RX_Pin, GPIO_PIN_SET);
+	{
+//		HAL_GPIO_WritePin(GPS_TIM_RX_GPIO_Port, GPS_TIM_RX_Pin, GPIO_PIN_SET);
 		GPS_Summary(buffer, sizeof(buffer));
-		HAL_GPIO_WritePin(GPS_TIM_RX_GPIO_Port, GPS_TIM_RX_Pin, GPIO_PIN_RESET);
+//		HAL_GPIO_WritePin(GPS_TIM_RX_GPIO_Port, GPS_TIM_RX_Pin, GPIO_PIN_RESET);
 	}
 	else
 	{
@@ -120,7 +120,7 @@ int32_t gps_cmd(int32_t argc, char **argv)
 	
 	return 0;
 }
-
+/*
 int32_t led_cmd(int32_t argc, char **argv)
 {
   extern cmd_t led_cmdlist[];
@@ -183,8 +183,8 @@ int32_t led_cmd(int32_t argc, char **argv)
 	}	
   return 0;
 }
-
-int32_t tile_cmd(int32_t argc, char **argv)
+*/
+int32_t swarm_cmd(int32_t argc, char **argv)
 {
   UNUSED(argc);
   UNUSED(argv);
@@ -201,18 +201,17 @@ int32_t tile_cmd(int32_t argc, char **argv)
 	{
 		memcpy(&args.arg[i],argv[i],max(strlen(argv[i]), MAX_ARG_SIZE));
 	}
-	if (tile.IsInitialized)
+	if (swarm.IsInitialized)
 	{		
-		ProcessTileCommands(args);
+		ProcessSwarmCommands(args);
 	}
 	else
 	{		
-		printf("Tile not initialized!\n");
+		printf("Swarm device not initialized!\n");
 	}
 	
   return 0;
 }
-*/
 
 
 static char *mystrdup(char *s)

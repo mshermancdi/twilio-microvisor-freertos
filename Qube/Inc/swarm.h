@@ -1,32 +1,32 @@
 /**********************************************************************************************
 
 
-	swarm_tile.h
+	swarm.h
 
 
 
 *************************************************************************************************/
 
-#ifndef __SWARM_TILE_H
-#define __SWARM_TILE_H
+#ifndef __SWARM_H
+#define __SWARM_H
 
 #include <stdint.h>
 #include "debug_utils.h"
-#include "nmea.h"
+#include "NMEA.h"
 //#include "cmsis_os2.h"                  // ::CMSIS:RTOS2
 #include "app_threadx.h"
 
-typedef enum _E_TILE_ERR {
-	TILE_OK,
-	TILE_NOT_OK
-} E_TILE_ERR;
+typedef enum _E_SWARM_ERR {
+	SWARM_OK,
+	SWARM_NOT_OK
+} E_SWARM_ERR;
 	
-typedef enum _E_TILE_STATE {
-	TILE_IF_NOT_STARTED,
-	TILE_IF_STARTUP,
-	TILE_IF_READY
+typedef enum _E_SWARM_STATE {
+	SWARM_IF_NOT_STARTED,
+	SWARM_IF_STARTUP,
+	SWARM_IF_READY
 	
-} E_TILE_STATE;
+} E_SWARM_STATE;
 
 enum FLAG {
 	INVALID = 'I',
@@ -52,7 +52,7 @@ enum FIX_TYPE {
 };
 
 
-enum TILE_GPIO_MODE {
+enum SWARM_GPIO_MODE {
 	ANALOG,						//0 Analog, pin is internally disconnected and not used (default)
 	IN_LO_HI,					//1 Input, low-to-high transition exits sleep mode
 	IN_HI_LO,					//2 Input, high-to-low transition exits sleep mode
@@ -66,23 +66,23 @@ enum TILE_GPIO_MODE {
 	OUT_HI_SLEEP			//10 Output, high indicates in sleep mode (4). Otherwise output is low
 };
 
-typedef struct _S_TILE_DEVICE_DATA S_TILE_DEVICE_DATA;
+typedef struct _S_SWARM_DEVICE_DATA S_SWARM_DEVICE_DATA;
 
-typedef struct _S_TILE_DEVICE {	
+typedef struct _S_SWARM_DEVICE {
 	TX_MUTEX *pMutex;
-	S_TILE_DEVICE_DATA *pData;
+	S_SWARM_DEVICE_DATA *pData;
 	uint8_t				IsInitialized;
 	S_NMEAParser 	*pNmeaParser;
 	uint8_t (*ParseBuffer)(uint8_t *pBuff, uint16_t dataLen);
 	uint8_t (*Startup)(uint8_t *pBuff);
-	E_TILE_ERR (*DebugInterface)(uint8_t *pBuff, uint16_t bufLen, ARG_LIST args, char *pTxBuf, void (**cbFunc)(uint8_t *, uint16_t), uint32_t *waitEventFlags, uint32_t *multiplicity);
-	E_TILE_STATE state;
+	E_SWARM_ERR (*DebugInterface)(uint8_t *pBuff, uint16_t bufLen, ARG_LIST args, char *pTxBuf, void (**cbFunc)(uint8_t *, uint16_t), uint32_t *waitEventFlags, uint32_t *multiplicity);
+	E_SWARM_STATE state;
 	uint8_t lastCommandRcvd[10];
 	void (*GetPositionTsJSON)(uint8_t *pBuf, uint8_t len);
 	void (*PrepareMessage)(uint8_t *pOut, uint8_t *pIn);
-} S_TILE_DEVICE;
+} S_SWARM_DEVICE;
 
-typedef enum _E_TILE_CMDS {
+typedef enum _E_SWARM_CMDS {
 	GET_CONFIG,
 	DATETIME,
 	VERSION,
@@ -95,29 +95,29 @@ typedef enum _E_TILE_CMDS {
 	RX_DATA,
 	RESTART,
 	RX_TEST,
-	TILE_STATUS,
+	SWARM_STATUS,
 	TX_DATA,
 	RX_MSGS,
 	TX_MSGS,
 	SLEEP,
-	TILE_HELP,
-	TILE_META,
+	SWARM_HELP,
+	SWARM_META,
 	
-	TILE_NULL_CMD = 255
-} E_TILE_CMDS;
+	SWARM_NULL_CMD = 255
+} E_SWARM_CMDS;
 
-typedef enum _E_TILE_MODE {
+typedef enum _E_SWARM_MODE {
 	NONE_MODE,
 	STARTUP_MODE,
 	RUNTIME_MODE
-} E_TILE_MODE;
+} E_SWARM_MODE;
 
-typedef enum _E_TILE_LED_MODE {
-	TILE_MSG_SENT,
-	TILE_ERR_COND,
-	TILE_BG_RSSI_GOOD,
-	TILE_BG_RSSI_BAD,
-} E_TILE_LED_MODE;
+typedef enum _E_SWARM_LED_MODE {
+	SWARM_MSG_SENT,
+	SWARM_ERR_COND,
+	SWARM_BG_RSSI_GOOD,
+	SWARM_BG_RSSI_BAD,
+} E_SWARM_LED_MODE;
 
-E_TILE_ERR TILE_Initialize(S_TILE_DEVICE *pDevice, TX_MUTEX *pMutex);
-#endif	/* __SWARM_TILE_H */
+E_SWARM_ERR SWARM_Initialize(S_SWARM_DEVICE *pDevice, TX_MUTEX *pMutex);
+#endif	/* __SWARM_H */

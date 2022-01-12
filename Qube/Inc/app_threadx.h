@@ -29,6 +29,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "../../threadx/common/inc/tx_api.h"
+#include "debug_utils.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -53,6 +54,7 @@
 /* Exported functions prototypes ---------------------------------------------*/
 UINT App_ThreadX_Init(VOID *memory_ptr);
 void MX_ThreadX_Init(void);
+void ProcessSwarmCommands(ARG_LIST args);
 
 /* USER CODE BEGIN EFP */
 
@@ -67,11 +69,11 @@ void MX_ThreadX_Init(void);
 #define TRIGGER_DETECT_STACK_SIZE           28*APP_STACK_SIZE
 #define PASS_VERIFY_STACK_SIZE              46*APP_STACK_SIZE
 #define SERVICE_PORT_STACK_SIZE				4*APP_STACK_SIZE
-#define TILE_STACK_SIZE						2*APP_STACK_SIZE
+#define SWARM_STACK_SIZE						2*APP_STACK_SIZE
 #define USER_BUTTON_STACK_SIZE				APP_STACK_SIZE
 #define LED_TASK_STACK_SIZE					APP_STACK_SIZE
 
-#define TILE_QUEUE_SIZE						5
+#define SWARM_QUEUE_SIZE						5
 //
 //	Define priorities  - Lower value --> Higher priority
 //
@@ -96,8 +98,8 @@ void MX_ThreadX_Init(void);
 #define USER_BUTTON_TASK_PRIO               				26
 #define USER_BUTTON_TASK_PREEMPTION_THRESHOLD				USER_BUTTON_TASK_PRIO
 
-#define TILE_TASK_PRIO                  					27
-#define TILE_TASK_PREEMPTION_THRESHOLD						TILE_TASK_PRIO
+#define SWARM_TASK_PRIO                  					27
+#define SWARM_TASK_PREEMPTION_THRESHOLD						SWARM_TASK_PRIO
 
 #define LED_TASK_PRIO               						28
 #define LED_TASK_PREEMPTION_THRESHOLD						LED_TASK_PRIO

@@ -30,7 +30,7 @@ typedef struct
 void console(const char *prompt, cmd_t cmdlist[]);
 int32_t help_cmd(int32_t argc, char **argv);
 int32_t quit_cmd(int32_t argc, char **argv);
-int32_t tile_cmd(int32_t argc, char **argv);
+int32_t swarm_cmd(int32_t argc, char **argv);
 int32_t led_cmd(int32_t argc, char **argv);
 int32_t gps_cmd(int32_t argc, char **argv);
 extern int32_t quit_msg;

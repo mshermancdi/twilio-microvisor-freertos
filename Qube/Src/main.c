@@ -26,6 +26,8 @@
 #include "app_threadx.h"
 #include "mv_syscalls.h"
 #include "usart.h"
+#include "gpdma.h"
+#include "tim.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -55,8 +57,6 @@
 
 __IO int uart_write_idx = 0;
 char uart_buffer[UART_BUFFER_SIZE];
-
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -97,13 +97,17 @@ int main(void)
 
     /* Initialize all configured peripherals */
     MX_GPIO_Init();
+    MX_GPDMA1_Init();
+//    MX_TIM3_Init();
     MX_USART1_UART_Init();
     MX_USART2_UART_Init();
+    MX_USART3_UART_Init();
     /* USER CODE BEGIN 2 */
 
     /* Force no buffer for the getc() usage. */
     setbuf(stdin, NULL);
 
+//	HAL_TIM_Base_Start_IT(&htim3);
     /* Start getchar under interrupt. */
     HAL_UART_Receive_IT(&console_uart, (uint8_t *)&uart_buffer[0], 1);
     /* USER CODE END 2 */

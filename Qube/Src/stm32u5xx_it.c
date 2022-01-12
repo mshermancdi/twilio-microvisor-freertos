@@ -24,7 +24,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "app_threadx.h"
-//#include "gps.h"
+#include "gps.h"
+#include "tim.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,11 +46,11 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 
-/*extern TX_SEMAPHORE txDataReadyBinarySem;
-extern TX_SEMAPHORE txXACReadyForVerifySem;
-extern TX_SEMAPHORE txYACReadyForVerifySem;
-extern TX_SEMAPHORE txXDCReadyForVerifySem;
-extern TX_SEMAPHORE txYDCReadyForVerifySem;*/
+extern TX_SEMAPHORE txDataReadyBinarySem;
+//extern TX_SEMAPHORE txXACReadyForVerifySem;
+//extern TX_SEMAPHORE txYACReadyForVerifySem;
+//extern TX_SEMAPHORE txXDCReadyForVerifySem;
+//extern TX_SEMAPHORE txYDCReadyForVerifySem;
 
 /* USER CODE END PV */
 
@@ -71,12 +72,12 @@ extern TX_SEMAPHORE txYDCReadyForVerifySem;*/
 //extern DMA_HandleTypeDef handle_GPDMA1_Channel1;
 //extern DMA_HandleTypeDef handle_GPDMA1_Channel0;
 //extern TIM_HandleTypeDef htim3;
-//extern DMA_HandleTypeDef handle_GPDMA1_Channel6;
-//extern DMA_HandleTypeDef handle_GPDMA1_Channel5;
-//extern DMA_HandleTypeDef handle_GPDMA1_Channel7;
+extern DMA_HandleTypeDef handle_GPDMA1_Channel6;
+extern DMA_HandleTypeDef handle_GPDMA1_Channel5;
+extern DMA_HandleTypeDef handle_GPDMA1_Channel7;
 extern UART_HandleTypeDef huart1;
-//extern UART_HandleTypeDef huart2;
-//extern UART_HandleTypeDef huart3;
+extern UART_HandleTypeDef huart2;
+extern UART_HandleTypeDef huart3;
 //extern TIM_HandleTypeDef htim6;
 
 /* USER CODE BEGIN EV */
@@ -245,7 +246,7 @@ void GPDMA1_Channel5_IRQHandler(void)
   /* USER CODE BEGIN GPDMA1_Channel5_IRQn 0 */
 
   /* USER CODE END GPDMA1_Channel5_IRQn 0 */
-//  HAL_DMA_IRQHandler(&handle_GPDMA1_Channel5);
+  HAL_DMA_IRQHandler(&handle_GPDMA1_Channel5);
   /* USER CODE BEGIN GPDMA1_Channel5_IRQn 1 */
 
   /* USER CODE END GPDMA1_Channel5_IRQn 1 */
@@ -259,7 +260,7 @@ void GPDMA1_Channel6_IRQHandler(void)
   /* USER CODE BEGIN GPDMA1_Channel6_IRQn 0 */
 
   /* USER CODE END GPDMA1_Channel6_IRQn 0 */
-//  HAL_DMA_IRQHandler(&handle_GPDMA1_Channel6);
+  HAL_DMA_IRQHandler(&handle_GPDMA1_Channel6);
   /* USER CODE BEGIN GPDMA1_Channel6_IRQn 1 */
 
   /* USER CODE END GPDMA1_Channel6_IRQn 1 */
@@ -273,7 +274,7 @@ void GPDMA1_Channel7_IRQHandler(void)
   /* USER CODE BEGIN GPDMA1_Channel7_IRQn 0 */
 
   /* USER CODE END GPDMA1_Channel7_IRQn 0 */
-//  HAL_DMA_IRQHandler(&handle_GPDMA1_Channel7);
+  HAL_DMA_IRQHandler(&handle_GPDMA1_Channel7);
   /* USER CODE BEGIN GPDMA1_Channel7_IRQn 1 */
 
   /* USER CODE END GPDMA1_Channel7_IRQn 1 */
@@ -285,9 +286,9 @@ void GPDMA1_Channel7_IRQHandler(void)
 void TIM3_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM3_IRQn 0 */
-//	GPS_TimeUpdate();
+	GPS_TimeUpdate();
   /* USER CODE END TIM3_IRQn 0 */
-//  HAL_TIM_IRQHandler(&htim3);
+  HAL_TIM_IRQHandler(&htim3);
   /* USER CODE BEGIN TIM3_IRQn 1 */
 
   /* USER CODE END TIM3_IRQn 1 */
@@ -315,7 +316,7 @@ void USART2_IRQHandler(void)
   /* USER CODE BEGIN USART2_IRQn 0 */
 
   /* USER CODE END USART2_IRQn 0 */
-//  HAL_UART_IRQHandler(&huart2);
+  HAL_UART_IRQHandler(&huart2);
   /* USER CODE BEGIN USART2_IRQn 1 */
 
   /* USER CODE END USART2_IRQn 1 */
@@ -329,7 +330,7 @@ void USART3_IRQHandler(void)
   /* USER CODE BEGIN USART3_IRQn 0 */
 
   /* USER CODE END USART3_IRQn 0 */
-//  HAL_UART_IRQHandler(&huart3);
+  HAL_UART_IRQHandler(&huart3);
   /* USER CODE BEGIN USART3_IRQn 1 */
 
   /* USER CODE END USART3_IRQn 1 */
