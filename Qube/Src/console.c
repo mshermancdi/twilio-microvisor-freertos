@@ -79,6 +79,8 @@ int32_t help_cmd(int32_t argc, char **argv)
   UNUSED(argc);
   UNUSED(argv);
   extern cmd_t cmdlist[];
+  uint64_t ms;
+  uint32_t hz;
   uint32_t i = 0;
   do
   {
@@ -86,6 +88,17 @@ int32_t help_cmd(int32_t argc, char **argv)
     i = i + 1;
   } while (cmdlist[i].name != NULL);
   printf("\nBUILD_TIME: %s\n", GetTimeStamp());
+  assert(MV_STATUS_OKAY == mvGetMicroseconds(&ms));
+  printf("MICROSECOND CLK: %llu\n", ms);
+  assert(MV_STATUS_OKAY == mvGetSysClk(&hz));
+  printf("SYS CLK FREQ: %ld\n", hz);
+  assert(MV_STATUS_OKAY == mvGetHClk(&hz));
+  printf("AHB BUS FREQ: %ld\n", hz);
+  assert(MV_STATUS_OKAY == mvGetPClk1(&hz));
+  printf("APB1 BUS FREQ: %ld\n", hz);
+  assert(MV_STATUS_OKAY == mvGetPClk2(&hz));
+  printf("APB2 BUS FREQ: %ld\n", hz);
+
   return 0;
 }
 
@@ -103,7 +116,7 @@ int32_t gps_cmd(int32_t argc, char **argv)
   UNUSED(argc);
   UNUSED(argv);
 	
-	uint8_t buffer[1000];
+	uint8_t buffer[1024];
 	
 	if (gps.IsInitialized)
 	{
@@ -116,7 +129,7 @@ int32_t gps_cmd(int32_t argc, char **argv)
 		sprintf((char*)buffer, "GPS not initialized!\n");
 	}
 	
-	printf("%s", buffer);
+	printf("%s\n", buffer);
 	
 	return 0;
 }
